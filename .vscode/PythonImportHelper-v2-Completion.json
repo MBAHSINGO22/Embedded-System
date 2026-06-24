@@ -1,0 +1,196 @@
+[
+    {
+        "label": "Flask",
+        "importPath": "flask",
+        "description": "flask",
+        "isExtraImport": true,
+        "detail": "flask",
+        "documentation": {}
+    },
+    {
+        "label": "render_template",
+        "importPath": "flask",
+        "description": "flask",
+        "isExtraImport": true,
+        "detail": "flask",
+        "documentation": {}
+    },
+    {
+        "label": "psycopg2",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "psycopg2",
+        "description": "psycopg2",
+        "detail": "psycopg2",
+        "documentation": {}
+    },
+    {
+        "label": "psycopg2.extras",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "psycopg2.extras",
+        "description": "psycopg2.extras",
+        "detail": "psycopg2.extras",
+        "documentation": {}
+    },
+    {
+        "label": "time",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "time",
+        "description": "time",
+        "detail": "time",
+        "documentation": {}
+    },
+    {
+        "label": "SMBus",
+        "importPath": "smbus2",
+        "description": "smbus2",
+        "isExtraImport": true,
+        "detail": "smbus2",
+        "documentation": {}
+    },
+    {
+        "label": "datetime",
+        "importPath": "datetime",
+        "description": "datetime",
+        "isExtraImport": true,
+        "detail": "datetime",
+        "documentation": {}
+    },
+    {
+        "label": "get_db_connection",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def get_db_connection():\n    return psycopg2.connect(DB_CONN)\n@app.route('/')\ndef dashboard():\n    conn = get_db_connection()\n    cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)\n    # Current status per slot (latest session per slot)\n    cur.execute(\"\"\"\n        SELECT car_id, slot_number, entry_time, exit_time, fee,\n               CASE WHEN exit_time IS NULL THEN 'occupied' ELSE 'vacant' END AS status",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "dashboard",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def dashboard():\n    conn = get_db_connection()\n    cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)\n    # Current status per slot (latest session per slot)\n    cur.execute(\"\"\"\n        SELECT car_id, slot_number, entry_time, exit_time, fee,\n               CASE WHEN exit_time IS NULL THEN 'occupied' ELSE 'vacant' END AS status\n        FROM parking_sessions\n        WHERE (slot_number, entry_time) IN (\n            SELECT slot_number, MAX(entry_time)",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "app",
+        "kind": 5,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "app = Flask(__name__)\nDB_CONN = \"dbname=smart_parking user=parking_admin password=12345 host=localhost\"\ndef get_db_connection():\n    return psycopg2.connect(DB_CONN)\n@app.route('/')\ndef dashboard():\n    conn = get_db_connection()\n    cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)\n    # Current status per slot (latest session per slot)\n    cur.execute(\"\"\"",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "DB_CONN",
+        "kind": 5,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "DB_CONN = \"dbname=smart_parking user=parking_admin password=12345 host=localhost\"\ndef get_db_connection():\n    return psycopg2.connect(DB_CONN)\n@app.route('/')\ndef dashboard():\n    conn = get_db_connection()\n    cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)\n    # Current status per slot (latest session per slot)\n    cur.execute(\"\"\"\n        SELECT car_id, slot_number, entry_time, exit_time, fee,",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "read_adc",
+        "kind": 2,
+        "importPath": "sensor_monitor",
+        "description": "sensor_monitor",
+        "peekOfCode": "def read_adc(channel):\n    \"\"\"Read a single analog channel (0-255).\"\"\"\n    bus.write_byte(ADC_ADDRESS, 0x40 | channel)\n    bus.read_byte(ADC_ADDRESS)   # dummy read\n    value = bus.read_byte(ADC_ADDRESS)\n    return value\ndef calc_fee(entry_time, exit_time):\n    \"\"\"Calculate parking fee in Rupiah, capped at MAX_FEE.\"\"\"\n    duration_minutes = (exit_time - entry_time).total_seconds() / 60.0\n    fee = duration_minutes * RATE_PER_MINUTE",
+        "detail": "sensor_monitor",
+        "documentation": {}
+    },
+    {
+        "label": "calc_fee",
+        "kind": 2,
+        "importPath": "sensor_monitor",
+        "description": "sensor_monitor",
+        "peekOfCode": "def calc_fee(entry_time, exit_time):\n    \"\"\"Calculate parking fee in Rupiah, capped at MAX_FEE.\"\"\"\n    duration_minutes = (exit_time - entry_time).total_seconds() / 60.0\n    fee = duration_minutes * RATE_PER_MINUTE\n    return min(fee, MAX_FEE)\ndef main():\n    global bus\n    bus = SMBus(1)\n    # State per slot: 'state', 'above_start' (timer), 'car_id' (the active car)\n    slots = {",
+        "detail": "sensor_monitor",
+        "documentation": {}
+    },
+    {
+        "label": "main",
+        "kind": 2,
+        "importPath": "sensor_monitor",
+        "description": "sensor_monitor",
+        "peekOfCode": "def main():\n    global bus\n    bus = SMBus(1)\n    # State per slot: 'state', 'above_start' (timer), 'car_id' (the active car)\n    slots = {\n        1: {'state': 'VACANT', 'above_start': None, 'car_id': None},\n        2: {'state': 'VACANT', 'above_start': None, 'car_id': None}\n    }\n    # Global sequential car counter\n    car_counter = 0",
+        "detail": "sensor_monitor",
+        "documentation": {}
+    },
+    {
+        "label": "THRESHOLD",
+        "kind": 5,
+        "importPath": "sensor_monitor",
+        "description": "sensor_monitor",
+        "peekOfCode": "THRESHOLD = 130          # ADC value above which a car is considered present\nENTRY_TIME = 2.5         # seconds to confirm entry\nEXIT_TIME = 3.0          # seconds to confirm exit\nRATE_PER_MINUTE = 1000   # Rp per minute\nMAX_FEE = 50000          # maximum fee in Rp\nADC_CHANNELS = {         # slot number -> PCF8591 analog channel\n    1: 0,                # Slot 1 = AIN0\n    2: 1                 # Slot 2 = AIN1\n}\n# ===================================",
+        "detail": "sensor_monitor",
+        "documentation": {}
+    },
+    {
+        "label": "ENTRY_TIME",
+        "kind": 5,
+        "importPath": "sensor_monitor",
+        "description": "sensor_monitor",
+        "peekOfCode": "ENTRY_TIME = 2.5         # seconds to confirm entry\nEXIT_TIME = 3.0          # seconds to confirm exit\nRATE_PER_MINUTE = 1000   # Rp per minute\nMAX_FEE = 50000          # maximum fee in Rp\nADC_CHANNELS = {         # slot number -> PCF8591 analog channel\n    1: 0,                # Slot 1 = AIN0\n    2: 1                 # Slot 2 = AIN1\n}\n# ===================================\nADC_ADDRESS = 0x48",
+        "detail": "sensor_monitor",
+        "documentation": {}
+    },
+    {
+        "label": "EXIT_TIME",
+        "kind": 5,
+        "importPath": "sensor_monitor",
+        "description": "sensor_monitor",
+        "peekOfCode": "EXIT_TIME = 3.0          # seconds to confirm exit\nRATE_PER_MINUTE = 1000   # Rp per minute\nMAX_FEE = 50000          # maximum fee in Rp\nADC_CHANNELS = {         # slot number -> PCF8591 analog channel\n    1: 0,                # Slot 1 = AIN0\n    2: 1                 # Slot 2 = AIN1\n}\n# ===================================\nADC_ADDRESS = 0x48\nDB_CONN = \"dbname=smart_parking user=parking_admin password=12345 host=localhost\"",
+        "detail": "sensor_monitor",
+        "documentation": {}
+    },
+    {
+        "label": "RATE_PER_MINUTE",
+        "kind": 5,
+        "importPath": "sensor_monitor",
+        "description": "sensor_monitor",
+        "peekOfCode": "RATE_PER_MINUTE = 1000   # Rp per minute\nMAX_FEE = 50000          # maximum fee in Rp\nADC_CHANNELS = {         # slot number -> PCF8591 analog channel\n    1: 0,                # Slot 1 = AIN0\n    2: 1                 # Slot 2 = AIN1\n}\n# ===================================\nADC_ADDRESS = 0x48\nDB_CONN = \"dbname=smart_parking user=parking_admin password=12345 host=localhost\"\ndef read_adc(channel):",
+        "detail": "sensor_monitor",
+        "documentation": {}
+    },
+    {
+        "label": "MAX_FEE",
+        "kind": 5,
+        "importPath": "sensor_monitor",
+        "description": "sensor_monitor",
+        "peekOfCode": "MAX_FEE = 50000          # maximum fee in Rp\nADC_CHANNELS = {         # slot number -> PCF8591 analog channel\n    1: 0,                # Slot 1 = AIN0\n    2: 1                 # Slot 2 = AIN1\n}\n# ===================================\nADC_ADDRESS = 0x48\nDB_CONN = \"dbname=smart_parking user=parking_admin password=12345 host=localhost\"\ndef read_adc(channel):\n    \"\"\"Read a single analog channel (0-255).\"\"\"",
+        "detail": "sensor_monitor",
+        "documentation": {}
+    },
+    {
+        "label": "ADC_CHANNELS",
+        "kind": 5,
+        "importPath": "sensor_monitor",
+        "description": "sensor_monitor",
+        "peekOfCode": "ADC_CHANNELS = {         # slot number -> PCF8591 analog channel\n    1: 0,                # Slot 1 = AIN0\n    2: 1                 # Slot 2 = AIN1\n}\n# ===================================\nADC_ADDRESS = 0x48\nDB_CONN = \"dbname=smart_parking user=parking_admin password=12345 host=localhost\"\ndef read_adc(channel):\n    \"\"\"Read a single analog channel (0-255).\"\"\"\n    bus.write_byte(ADC_ADDRESS, 0x40 | channel)",
+        "detail": "sensor_monitor",
+        "documentation": {}
+    },
+    {
+        "label": "ADC_ADDRESS",
+        "kind": 5,
+        "importPath": "sensor_monitor",
+        "description": "sensor_monitor",
+        "peekOfCode": "ADC_ADDRESS = 0x48\nDB_CONN = \"dbname=smart_parking user=parking_admin password=12345 host=localhost\"\ndef read_adc(channel):\n    \"\"\"Read a single analog channel (0-255).\"\"\"\n    bus.write_byte(ADC_ADDRESS, 0x40 | channel)\n    bus.read_byte(ADC_ADDRESS)   # dummy read\n    value = bus.read_byte(ADC_ADDRESS)\n    return value\ndef calc_fee(entry_time, exit_time):\n    \"\"\"Calculate parking fee in Rupiah, capped at MAX_FEE.\"\"\"",
+        "detail": "sensor_monitor",
+        "documentation": {}
+    },
+    {
+        "label": "DB_CONN",
+        "kind": 5,
+        "importPath": "sensor_monitor",
+        "description": "sensor_monitor",
+        "peekOfCode": "DB_CONN = \"dbname=smart_parking user=parking_admin password=12345 host=localhost\"\ndef read_adc(channel):\n    \"\"\"Read a single analog channel (0-255).\"\"\"\n    bus.write_byte(ADC_ADDRESS, 0x40 | channel)\n    bus.read_byte(ADC_ADDRESS)   # dummy read\n    value = bus.read_byte(ADC_ADDRESS)\n    return value\ndef calc_fee(entry_time, exit_time):\n    \"\"\"Calculate parking fee in Rupiah, capped at MAX_FEE.\"\"\"\n    duration_minutes = (exit_time - entry_time).total_seconds() / 60.0",
+        "detail": "sensor_monitor",
+        "documentation": {}
+    }
+]
